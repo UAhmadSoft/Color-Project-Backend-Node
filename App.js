@@ -1,6 +1,7 @@
 const dotenv = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const DBConnect = require('./utils/DBConnect');
 const Palette = require('./models/PaletteModel');
@@ -21,6 +22,9 @@ DBConnect();
 
 // ? Middlewares
 app.use(express.json());
+
+// * Cors
+app.use(cors());
 
 app.get('/api/v1/palettes', async (req, res) => {
    const palettes = await Palette.find();
