@@ -27,8 +27,8 @@ const paletteSchema = new mongoose.Schema({
    },
    _id: {
       type: String,
-      default: name.replace('/ /g', '-'),
+      // default: name.replace('/ /g', '-'),
    },
 });
 
-export default PaletteModel = mongoose.model('Palette', paletteSchema);
+module.exports = mongoose.model('Palette', paletteSchema);
