@@ -90,9 +90,14 @@ app.patch('/api/v1/palettes/:id', urlEncodedParser, async (req, res) => {
 });
 
 app.delete('/api/v1/palettes/:id', async (req, res) => {
-   await Palette.findByIdAndDelete(req.params.id);
+   const palette = await Palette.findByIdAndDelete(req.params.id);
 
-   console.log('palettes', palettes);
+   if (!palette) {
+      res.status(200).json({
+         status: `No Palette with id  ${req.params.id}`,
+      });
+   }
+
    res.status(200).json({
       status: 'success',
    });
