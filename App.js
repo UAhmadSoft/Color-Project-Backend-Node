@@ -29,7 +29,7 @@ app.use(cors());
 app.get('/api/v1/palettes', async (req, res) => {
    const palettes = await Palette.find();
 
-   console.log('palettes', palettes);
+   // console.log('palettes', palettes);
    res.status(200).json({
       status: 'success',
       data: palettes,
@@ -46,8 +46,13 @@ app.post('/api/v1/palettes/', urlEncodedParser, async (req, res) => {
       });
    }
 
+   // console.log('palette', palette);
+
    const newPalette = await Palette.create({
-      palette,
+      name: palette.paletteName,
+      _id: palette.id,
+      emoji: palette.emoji,
+      colors: palette.colors,
    });
 
    if (!newPalette) {
@@ -66,6 +71,7 @@ app.post('/api/v1/palettes/', urlEncodedParser, async (req, res) => {
 
 app.patch('/api/v1/palettes/:id', urlEncodedParser, async (req, res) => {
    const palette = req.body.palette;
+   const currentPalette = await Palette.findById(req.params.id);
 
    if (!palette) {
       return res.status(400).json({
@@ -73,11 +79,36 @@ app.patch('/api/v1/palettes/:id', urlEncodedParser, async (req, res) => {
          message: 'Plz send Palette with request',
       });
    }
+   if (!currentPalette) {
+      return res.status(400).json({
+         status: 'fail',
+         message: 'No Palette with that id',
+      });
+   }
 
-   const updatedPalette = await Palette.findByIdAndUpdate(
-      req.params.id,
-      palette
-   );
+   let updatedPalette;
+   if (palette.id) {
+      console.log('removing and creating updated Palette');
+      // ! We Can't mutate id so remove Palette and make new one
+      // remove existing Palette
+
+      await Palette.findByIdAndDelete(req.params.id);
+
+      currentPalette._id = palette.id;
+
+      Object.keys(currentPalette._doc).forEach(function (key) {
+         if (palette[key]) currentPalette._doc[key] = palette[key];
+      });
+
+      console.log('currentPalette', currentPalette._doc);
+      updatedPalette = await Palette.create(currentPalette._doc);
+   } else {
+      console.log('updated Palette');
+
+      updatedPalette = await Palette.findByIdAndUpdate(req.params.id, palette, {
+         new: true,
+      });
+   }
 
    if (!updatedPalette) {
       return res.status(500).json({
@@ -85,6 +116,9 @@ app.patch('/api/v1/palettes/:id', urlEncodedParser, async (req, res) => {
          message: 'Error Updating Palette . Plz try again later',
       });
    }
+   // console.log('palette', palette);
+
+   // console.log('updatedPalette', updatedPalette);
 
    // console.log('palettes', palettes);
    res.status(200).json({
