@@ -1,11 +1,18 @@
+const dotenv = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');
 
 const Palette = require('./models/PaletteModel');
 
+// ~ Configuring Environment Variables
+dotenv.config({
+   path: './config.env',
+});
+
 const app = express();
 const urlEncodedParser = bodyParser.urlencoded({
    extended: false,
+   useNewUrlParser: true,
 });
 
 // ? Middlewares
