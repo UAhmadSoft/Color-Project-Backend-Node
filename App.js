@@ -2,6 +2,7 @@ const dotenv = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const DBConnect = require('./utils/DBConnect');
 const Palette = require('./models/PaletteModel');
 
 // ~ Configuring Environment Variables
@@ -14,6 +15,9 @@ const urlEncodedParser = bodyParser.urlencoded({
    extended: false,
    useNewUrlParser: true,
 });
+
+// * Connecting to Databse
+DBConnect();
 
 // ? Middlewares
 app.use(express.json());
