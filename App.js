@@ -2,6 +2,7 @@ const dotenv = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const morgan = require('morgan');
 
 const DBConnect = require('./utils/DBConnect');
 const Palette = require('./models/PaletteModel');
@@ -25,6 +26,8 @@ app.use(express.json());
 
 // * Cors
 app.use(cors());
+
+app.use(morgan('dev'));
 
 app.get('/api/v1/palettes', async (req, res) => {
    const palettes = await Palette.find();
@@ -116,6 +119,7 @@ app.patch('/api/v1/palettes/:id', urlEncodedParser, async (req, res) => {
          message: 'Error Updating Palette . Plz try again later',
       });
    }
+
    // console.log('palette', palette);
 
    // console.log('updatedPalette', updatedPalette);
