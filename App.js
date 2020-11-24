@@ -76,6 +76,8 @@ app.patch('/api/v1/palettes/:id', urlEncodedParser, async (req, res) => {
    const palette = req.body.palette;
    const currentPalette = await Palette.findById(req.params.id);
 
+   console.log('palette', palette);
+
    if (!palette) {
       return res.status(400).json({
          status: 'fail',
@@ -83,7 +85,7 @@ app.patch('/api/v1/palettes/:id', urlEncodedParser, async (req, res) => {
       });
    }
    if (!currentPalette) {
-      return res.status(400).json({
+      return res.status(404).json({
          status: 'fail',
          message: 'No Palette with that id',
       });
@@ -98,6 +100,11 @@ app.patch('/api/v1/palettes/:id', urlEncodedParser, async (req, res) => {
       await Palette.findByIdAndDelete(req.params.id);
 
       currentPalette._id = palette.id;
+
+      if (palette.paletteName) {
+         palette['name'] = palette.paletteName;
+         delete palette['paletteName'];
+      }
 
       Object.keys(currentPalette._doc).forEach(function (key) {
          if (palette[key]) currentPalette._doc[key] = palette[key];
@@ -135,7 +142,7 @@ app.delete('/api/v1/palettes/:id', async (req, res) => {
    const palette = await Palette.findByIdAndDelete(req.params.id);
 
    if (!palette) {
-      res.status(200).json({
+      return res.status(404).json({
          status: `No Palette with id  ${req.params.id}`,
       });
    }
