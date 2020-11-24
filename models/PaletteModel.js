@@ -5,18 +5,19 @@ const paletteSchema = new mongoose.Schema({
       type: String,
       required: true,
       trim: true,
+      unique: true,
    },
    colors: [
       {
          name: {
             type: String,
             required: true,
-            unique: true,
+            unique: false,
          },
          color: {
             type: String,
             required: true,
-            unique: true,
+            // unique: true,
          },
       },
    ],
