@@ -1,6 +1,7 @@
 const Palette = require('../models/PaletteModel');
+const CatchAsync = require('../utils/CatchAsync');
 
-exports.getAllPalettes = async (req, res) => {
+exports.getAllPalettes = CatchAsync(async (req, res, next) => {
    const palettes = await Palette.find();
 
    // console.log('palettes', palettes);
@@ -8,9 +9,9 @@ exports.getAllPalettes = async (req, res) => {
       status: 'success',
       data: palettes,
    });
-};
+});
 
-exports.addNewPalette = async (req, res) => {
+exports.addNewPalette = CatchAsync(async (req, res, next) => {
    const palette = req.body.palette;
 
    if (!palette) {
@@ -41,9 +42,9 @@ exports.addNewPalette = async (req, res) => {
       status: 'success',
       data: newPalette,
    });
-};
+});
 
-exports.updatePalatte = async (req, res) => {
+exports.updatePalatte = CatchAsync(async (req, res, next) => {
    const currentPalette = await Palette.findById(req.params.id);
 
    if (!currentPalette) {
@@ -102,9 +103,9 @@ exports.updatePalatte = async (req, res) => {
       status: 'success',
       data: updatedPalette,
    });
-};
+});
 
-exports.deletePalette = async (req, res) => {
+exports.deletePalette = CatchAsync(async (req, res, next) => {
    const palette = await Palette.findByIdAndDelete(req.params.id);
 
    if (!palette) {
@@ -116,4 +117,4 @@ exports.deletePalette = async (req, res) => {
    res.status(200).json({
       status: 'success',
    });
-};
+});
