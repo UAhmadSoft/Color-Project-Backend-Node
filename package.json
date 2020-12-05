@@ -4,7 +4,8 @@
    "description": "Backend/API for Color Project",
    "main": "app.js",
    "scripts": {
-      "start": "nodemon app.js"
+      "dev": "nodemon app.js",
+      "start": "node app.js"
    },
    "author": "@UAhmadSoft",
    "license": "ISC",
