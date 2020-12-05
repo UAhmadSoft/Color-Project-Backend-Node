@@ -9,6 +9,8 @@ const PaletteRouter = require('./Routes/PaletteRouter');
 
 // Utils
 const DBConnect = require('./utils/DBConnect');
+const AppError = require('./utils/AppError');
+const ErrorController = require('./Controllers/ErrorController');
 
 // ~ Configuring Environment Variables
 dotenv.config({
@@ -30,6 +32,14 @@ app.use(morgan('dev'));
 
 //  * Routes
 app.use('/api/v1/palettes', PaletteRouter);
+
+// ! 404 Route Handler
+app.all('*', (req, res, next) => {
+   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
+});
+
+// ? Use Global Error handler
+app.use(ErrorController);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`listening to port ${PORT}`));
