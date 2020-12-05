@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const paletteSchema = new mongoose.Schema({
    name: {
       type: String,
-      required: true,
+      required: [true, 'A Palette must have a name'],
       trim: true,
       unique: true,
    },
