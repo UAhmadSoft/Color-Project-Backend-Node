@@ -3,6 +3,7 @@ class AppError extends Error {
       super(message);
 
       this.statusCode = errCode;
+      errCode = '' + errCode;
       this.status = errCode.startsWith('4') ? 'failed' : 'error';
 
       this.isOperational = true;
